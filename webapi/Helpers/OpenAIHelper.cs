@@ -85,7 +85,7 @@ public class OpenAIHelper : IOpenAIHelper
 
         // If streaming is not selected
         Response<Completions> completionsResponse = await client.GetCompletionsAsync(
-            deploymentOrModelName: this._config.GetSection("AIService")["DeploymentContainer"],
+            deploymentOrModelName: this._config.GetSection("AIService")["ChatBotDeploymentContainer"],
             new CompletionsOptions()
             {
                 Prompts = { prompts },
@@ -99,7 +99,8 @@ public class OpenAIHelper : IOpenAIHelper
             });
         Completions completions = completionsResponse.Value;
 
-        return "SELECT" + completions.Choices[0].Text;
+        string replyText = completions.Choices[0].Text;
+        return replyText.Substring(replyText.IndexOf("SELECT"));
     }
 
     public async Task<string> RewriteQuery(string query)

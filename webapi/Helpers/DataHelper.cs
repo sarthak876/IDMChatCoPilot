@@ -2,11 +2,14 @@
 
 using Azure.Core;
 using Azure.Identity;
+using CopilotChat.WebApi.Skills.NLToSQLSkills;
+using CopilotChat.WebApi.Skills.Schema;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -25,17 +28,19 @@ public class DataHelper : IDataHelper
         this._openAIHelper = openAIHelper;
     }
 
-    public async Task<string> SearchIdmTestDB(string query, string userInput)
+    public async Task<string> SearchIdmTestDB(string query, string userInput, string dataSource)
     {
         try
         {
+            string originalQuery = query;
             //Call OpenAI again with instructions to generate query with union instead of join as join is resulting in duplicate records
-            var tables = this._config.GetSection("AIService:Tables").Get<List<string>>();
-            if (this.IsQueryContainsMultipleTables(query, tables))
-            {
-                string tableSchema = this._config.GetSection("AIService")["BomDemandSupplyWithAdditionalInsstructions"];
-                query = await this._openAIHelper.Search(userInput, tableSchema);
-            }
+            List<string> tableNames = await SchemaProvider.GetTableNamesFromSchema(
+                         Path.Combine(Repo.RootConfigFolder, "schema", $"{dataSource}.json")).ConfigureAwait(false);
+            //if (this.IsQueryContainsMultipleTables(query, tableNames))
+            //{
+            //    string schema = this._config.GetSection("AIService")["CrossTableQuery"];
+            //    query = await this._openAIHelper.Search(query, schema);
+            //}
             if (!string.IsNullOrWhiteSpace(query))
             {
                 using (var conn = new SqlConnection(this._config.GetConnectionString("BomDemandSupply")))
@@ -58,27 +63,31 @@ public class DataHelper : IDataHelper
         }
         catch (Exception ex)
         {
-            if (ex?.Message?.ToLower()?.Contains("syntax") ?? false)
-            {
-                string updatedQuery = await this._openAIHelper.RewriteQuery(query);
-                return await this.SearchIdmTestDB(updatedQuery, userInput);
-            }
-            return ex.Message + ex.StackTrace;
+            //if (ex?.Message?.ToLower()?.Contains("syntax") ?? false)
+            //{
+            //    string updatedQuery = await this._openAIHelper.RewriteQuery(query);
+            //    return await this.SearchIdmTestDB(updatedQuery, userInput);
+            //}
+            //return ex.Message + ex.StackTrace;
+            return "Sorry!Unable to fetch any records";
         }
 
         return "Sorry!Unable to fetch any records";
     }
 
-    public string FindDataSource(string ques)
+    public async Task<string> FindDataSource(string ques)
     {
         if (!string.IsNullOrWhiteSpace(ques))
         {
+            var dictionary = new Dictionary<string, List<string>>();
             var wordsExtractedFromInput = ExtractWordsFromUserInput(ques);
-            var wordsExtractedFromIdmTestSchema = this.ExtractWordsFromBomTableSchema("BomDemandSupplyWithAdditionalInsstructions");
-            var dictionary = new Dictionary<string, List<string>>
+            var schemaNames = SchemaDefinitions.GetNames().ToArray();
+            foreach (var schemaName in schemaNames)
             {
-                { "idmtestdb", wordsExtractedFromIdmTestSchema }
-            };
+                var wordsExtractedFromIdmTestSchema = await this.ExtractWordsFromBomTableSchema(schemaName);
+                dictionary.Add(schemaName, wordsExtractedFromIdmTestSchema);
+            }
+
             foreach (var keyValuePair in dictionary)
             {
                 foreach (var word in wordsExtractedFromInput)
@@ -98,7 +107,7 @@ public class DataHelper : IDataHelper
     {
         return dataSource switch
         {
-            "idmtestdb" => await this.SearchIdmTestDB(query, userInput),
+            "BomDemandSupply" => await this.SearchIdmTestDB(query, userInput, dataSource),
             _ => string.Empty,
         };
     }
@@ -136,37 +145,32 @@ public class DataHelper : IDataHelper
         return result;
     }
 
-    private List<string> ExtractWordsFromBomTableSchema(string schema)
+    private async Task<List<string>> ExtractWordsFromBomTableSchema(string schema)
     {
         List<string> allTableColumns = new();
         List<string>? finalList = null;
-        string tableSchema = this._config.GetSection("AIService")[schema];
+        List<string> columnNames = await SchemaProvider.GetColumnNamesFromSchema(
+           Path.Combine(Repo.RootConfigFolder, "schema", $"{schema}.json")).ConfigureAwait(false);
 
-        // Use regex pattern to extract values within parentheses ie, ColunmNames of DB Table along with Table name
-        string pattern = @"\(([^)]+)\)";
-        Regex regex = new(pattern);
-        MatchCollection matches = regex.Matches(tableSchema);
+        allTableColumns.AddRange(columnNames);
 
-        foreach (Match match in matches)
+        foreach (string column in columnNames)
         {
-            string colunmNamesWithinParentheses = match.Groups[1].Value;
-            colunmNamesWithinParentheses = colunmNamesWithinParentheses.Replace("_", "");
-            List<string> colunmList = new(colunmNamesWithinParentheses.Split(new[] { ',', '.', ':', '\t', '_' }, StringSplitOptions.RemoveEmptyEntries));
-            foreach (string column in colunmList)
+            if (column.Contains("_"))
             {
-                allTableColumns.Add(column.Trim().ToLower());
-                //Get list split by caps
-                string[] words = ToNamingConvention(column.Trim());
+                allTableColumns.Add(column.Replace("_", "").Trim().ToLower());
+            }
+            //Get list split by caps
+            string[] words = ToNamingConvention(column.Trim());
 
-                foreach (string word in words)
+            foreach (string word in words)
+            {
+                if (word == " ")
                 {
-                    if (word == " ")
-                    {
-                        continue;
-                    }
-                    // Convert the word to lowercase and remove any leading/trailing whitespace
-                    allTableColumns.Add(word.Trim().ToLower());
+                    continue;
                 }
+                // Convert the word to lowercase and remove any leading/trailing whitespace
+                allTableColumns.Add(word.Trim().ToLower());
             }
         }
 

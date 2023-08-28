@@ -737,11 +737,11 @@ public class ChatSkill
         var chatCompletion = this._kernel.GetService<IChatCompletion>();
         var chatMessage = await this.CreateBotMessageOnClient(chatId, userId, JsonSerializer.Serialize(prompt), string.Empty);
         string dataSourceResult = string.Empty;
-        if (!string.IsNullOrWhiteSpace(this._dataHelper.FindDataSource(input)))
+        if (!string.IsNullOrWhiteSpace(await this._dataHelper.FindDataSource(input)))
         {
             await this._sqlSchemaProviderHarness.CaptureDBSchemaAsync();
             string query = await this._nl2SqlSkill.ExecuteAsync(input);
-            dataSourceResult = await this._dataHelper.QueryDataSource(this._dataHelper.FindDataSource(input), query, input);
+            dataSourceResult = await this._dataHelper.QueryDataSource(await this._dataHelper.FindDataSource(input), query, input);
         }
 
         // Create message on client

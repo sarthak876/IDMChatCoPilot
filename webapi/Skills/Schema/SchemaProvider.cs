@@ -24,4 +24,30 @@ public static class SchemaProvider
             await kernel.Memory.SaveInformationAsync(MemoryCollectionName, schemaText, schema.Name, additionalMetadata: schema.Platform).ConfigureAwait(false);
         }
     }
+
+    public static async Task<List<string>> GetColumnNamesFromSchema(string schemaPath)
+    {
+        List<string> columnNames = new();
+        var schema = await SchemaSerializer.ReadAsync(schemaPath).ConfigureAwait(false);
+        foreach (var table in schema.Tables)
+        {
+            columnNames.Add(table.Name.Replace("dbo.", ""));
+            foreach (var columnName in table.Columns)
+            {
+                columnNames.Add(columnName.Name);
+            }
+        }
+        return columnNames;
+    }
+
+    public static async Task<List<string>> GetTableNamesFromSchema(string schemaPath)
+    {
+        List<string> tableNames = new();
+        var schema = await SchemaSerializer.ReadAsync(schemaPath).ConfigureAwait(false);
+        foreach (var table in schema.Tables)
+        {
+            tableNames.Add(table.Name.Replace("dbo.", ""));
+        }
+        return tableNames;
+    }
 }
