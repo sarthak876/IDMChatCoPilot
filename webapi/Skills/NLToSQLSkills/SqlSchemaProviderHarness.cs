@@ -3,6 +3,7 @@
 namespace CopilotChat.WebApi.Skills.NLToSQLSkills;
 
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
@@ -16,7 +17,7 @@ using Microsoft.Extensions.Configuration;
 /// </summary>
 public sealed class SqlSchemaProviderHarness
 {
-    private const string BomDemandSupply = "BomDemandSupply";
+    //private const string BomDemandSupply = "BomDemandSupply";
 
     private IConfiguration _configuration;
 
@@ -27,7 +28,6 @@ public sealed class SqlSchemaProviderHarness
 
     public async Task CaptureSchemaAsync(string databaseKey, string? description, params string[] tableNames)
     {
-        databaseKey = BomDemandSupply;
         var connectionString = this._configuration.GetConnectionString(databaseKey);
         using var connection = new SqlConnection(connectionString);
         var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = "18b131e3-ff7e-4225-9474-76af8f1e27cf" });
@@ -48,6 +48,17 @@ public sealed class SqlSchemaProviderHarness
 
         // Capture json for reserialization
         await this.SaveSchemaAsync("json", databaseKey, schema.ToJson()).ConfigureAwait(false);
+    }
+
+    public async Task CaptureDBSchemaAsync()
+    {
+        var schemaNames = SchemaDefinitions.GetNames().ToArray();
+        foreach (var schema in schemaNames)
+        {
+            await this.CaptureSchemaAsync(
+                schema,
+                this._configuration.GetSection("AIService")[schema]).ConfigureAwait(false);
+        }
     }
 
     private async Task SaveSchemaAsync(string extension, string databaseKey, string schemaText)

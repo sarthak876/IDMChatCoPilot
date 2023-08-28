@@ -27,11 +27,7 @@ public class Nl2SqlSkill
 
     public async Task<string> ExecuteAsync(string objective)
     {
-        var schemaNames = new List<string>();
-        schemaNames.Add("BomDemandSupply");
-        //await this._schemaProviderHarness.CaptureSchemaAsync(
-        //    "BomDemandSupply",
-        //    "demand, supply, and component data for the suppliers.").ConfigureAwait(false);
+        var schemaNames = SchemaDefinitions.GetNames().ToArray();
         await SchemaProvider.InitializeAsync(
             this._kernel,
             schemaNames.Select(s => Path.Combine(Repo.RootConfigFolder, "schema", $"{s}.json"))).ConfigureAwait(false);

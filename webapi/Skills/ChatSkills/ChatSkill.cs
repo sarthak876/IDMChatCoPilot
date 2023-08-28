@@ -739,6 +739,7 @@ public class ChatSkill
         string dataSourceResult = string.Empty;
         if (!string.IsNullOrWhiteSpace(this._dataHelper.FindDataSource(input)))
         {
+            await this._sqlSchemaProviderHarness.CaptureDBSchemaAsync();
             string query = await this._nl2SqlSkill.ExecuteAsync(input);
             dataSourceResult = await this._dataHelper.QueryDataSource(this._dataHelper.FindDataSource(input), query, input);
         }
