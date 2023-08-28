@@ -1,0 +1,656 @@
+{
+  "Name": "IDMTest",
+  "Description": "demand, supply, and component data for the suppliers.",
+  "Platform": "Microsoft SQL Server",
+  "Tables": [
+    {
+      "Name": "dbo.breakfixhistry_0803",
+      "Columns": [
+        {
+          "Name": "ActionPropertyName",
+          "Type": "varchar"
+        },
+        {
+          "Name": "BreakFixDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "ChangedProperties",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Comments",
+          "Type": "varchar"
+        },
+        {
+          "Name": "DimensionGroup",
+          "Type": "varchar"
+        },
+        {
+          "Name": "EventType",
+          "Type": "varchar"
+        },
+        {
+          "Name": "FailedAssetTag",
+          "Type": "varchar"
+        },
+        {
+          "Name": "FailedItemSkuId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "FailedSerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "isCancelled",
+          "Type": "int"
+        },
+        {
+          "Name": "LastUpdatedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "MsfIdBuilt",
+          "Type": "varchar"
+        },
+        {
+          "Name": "ParentAssetTag",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumberBuilt",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SparePartAssetTag",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SparePartItemSkuId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SparePartSerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Status",
+          "Type": "varchar"
+        },
+        {
+          "Name": "TicketNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "WALNotificationId",
+          "Type": "varchar"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.Component_0803",
+      "Columns": [
+        {
+          "Name": "ComponentName",
+          "Type": "varchar"
+        },
+        {
+          "Name": "CreatedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "DeviceSerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "IsActive",
+          "Type": "bit"
+        },
+        {
+          "Name": "IsDeviceBreakfixed",
+          "Type": "bit"
+        },
+        {
+          "Name": "ItemGroup",
+          "Type": "varchar"
+        },
+        {
+          "Name": "ItemType",
+          "Type": "varchar"
+        },
+        {
+          "Name": "LotTrackingNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MItemId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "ModifiedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "MPN",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MsfId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MsfIdBuilt",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MsfIdPlanned",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Quantity",
+          "Type": "int"
+        },
+        {
+          "Name": "QuantityPlanned",
+          "Type": "int"
+        },
+        {
+          "Name": "RackSerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumberBuilt",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Vendor",
+          "Type": "varchar"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.Demand",
+      "Columns": [
+        {
+          "Name": "Azure_Region",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Id",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Quantity",
+          "Type": "float"
+        },
+        {
+          "Name": "Capex_ApprovalDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "Component_Description",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Component_Number",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Country",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Demand_Quantity",
+          "Type": "float"
+        },
+        {
+          "Name": "Demand_ReferenceId",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Demand_Shifted_Planned_DockDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "Facility_ShortCode",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "IsActive_Demand",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "IsCapex_Approved",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "ItemGroup",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Leadtime_InWks",
+          "Type": "int"
+        },
+        {
+          "Name": "Legacy_Parent_PartNumber",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Legacy_PartNumber",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Level",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Manufacturer",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "MSF_SKU_Name",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Net_DeviceRole",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "NettingType",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Network_Intent",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Network_InventoryStatus",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Network_SnapshotDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "Original_Demand_Quantity",
+          "Type": "float"
+        },
+        {
+          "Name": "Planned_DockDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "Planned_DockMonday",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "Planned_Sku_Name",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "PO_Number",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Source",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Source_Id",
+          "Type": "float"
+        },
+        {
+          "Name": "Source_Type",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Spareable",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "State",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "SystemIntegrator",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Tier",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "ToBe_Prepositioned",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Unified_Region",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "UNSPSCCode",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "W2L_Candidate",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Work_Planned_DockDate",
+          "Type": "datetime2"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.Device_0803",
+      "Columns": [
+        {
+          "Name": "AssetTag",
+          "Type": "varchar"
+        },
+        {
+          "Name": "CreatedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "CreatedDateHwis",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "DeviceState",
+          "Type": "varchar"
+        },
+        {
+          "Name": "IsActive",
+          "Type": "bit"
+        },
+        {
+          "Name": "ItemType",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MItemId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "ModifiedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "ModifiedDateHwis",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "MsfId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "RackSerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumberBuilt",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SlotNumber",
+          "Type": "int"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.Rack_0803",
+      "Columns": [
+        {
+          "Name": "AssetTag",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Colocation",
+          "Type": "varchar"
+        },
+        {
+          "Name": "CreatedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "CreatedDateHwis",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "CreatedDateQms",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "DcCode",
+          "Type": "varchar"
+        },
+        {
+          "Name": "DeviceState",
+          "Type": "varchar"
+        },
+        {
+          "Name": "IsActive",
+          "Type": "bit"
+        },
+        {
+          "Name": "MdmId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "MItemId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "ModifiedDate",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "ModifiedDateHwis",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "ModifiedDateQms",
+          "Type": "datetime2"
+        },
+        {
+          "Name": "MsfId",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SerialNumber",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SiteIdentifier",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SlotNumber",
+          "Type": "int"
+        },
+        {
+          "Name": "Supplier",
+          "Type": "varchar"
+        },
+        {
+          "Name": "SupplierSite",
+          "Type": "varchar"
+        },
+        {
+          "Name": "Tile",
+          "Type": "varchar"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.Supply",
+      "Columns": [
+        {
+          "Name": "Component_Description",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Component_Number",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Factory",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Inventory_DateType",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Inventory_Type",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "InventoryDate",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "InventoryMonday",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Manufacturer",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Open_OrderType",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "openOrder_PoDetailOrderNumber",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Status",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Supplier",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Total_Quantity",
+          "Type": "float"
+        },
+        {
+          "Name": "Unified_Region",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "UnitPrice",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "WWTNBD",
+          "Type": "nvarchar"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.sysdiagrams",
+      "Columns": [
+        {
+          "Name": "diagram_id",
+          "Type": "int",
+          "IsPrimary": true
+        },
+        {
+          "Name": "definition",
+          "Type": "varbinary"
+        },
+        {
+          "Name": "name",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "principal_id",
+          "Type": "int"
+        },
+        {
+          "Name": "version",
+          "Type": "int"
+        }
+      ]
+    },
+    {
+      "Name": "dbo.WWWBom",
+      "Columns": [
+        {
+          "Name": "AdfPipelineRunId",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Description",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Item_Complete",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Item_Segment2",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Msf_Cross_Ref",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Netsku_Cross_Ref",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Bom_Org_Code",
+          "Type": "int"
+        },
+        {
+          "Name": "Comp_Description",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Comp_Item_Complete",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Comp_Item_Segment2",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Comp_Msf_Cross_Ref",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "Comp_Qty",
+          "Type": "float"
+        },
+        {
+          "Name": "Comp_Type",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "IsAssemled",
+          "Type": "nvarchar"
+        },
+        {
+          "Name": "UploadDate",
+          "Type": "datetime2"
+        }
+      ]
+    }
+  ]
+}
