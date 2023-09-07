@@ -53,6 +53,9 @@ const useClasses = makeStyles({
             visibility: 'visible',
         },
     },
+    remove:{
+        display:'none'
+    }
 });
 
 export const PluginGallery: React.FC = () => {
@@ -70,6 +73,7 @@ export const PluginGallery: React.FC = () => {
         >
             <DialogTrigger>
                 <Button
+                    className={classes.remove}
                     data-testid="pluginButton"
                     style={{ color: 'white' }}
                     appearance="transparent"

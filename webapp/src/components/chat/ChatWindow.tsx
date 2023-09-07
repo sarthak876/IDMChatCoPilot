@@ -86,6 +86,9 @@ const useClasses = makeStyles({
         flexDirection: 'column',
         ...shorthands.margin(0, '72px'),
     },
+    remove:{
+        display:'none'
+    }
 });
 
 export const ChatWindow: React.FC = () => {
@@ -161,6 +164,7 @@ export const ChatWindow: React.FC = () => {
                         {features[FeatureKeys.PluginsPlannersAndPersonas].enabled && (
                             <>
                                 <Tab
+                                    className={classes.remove}
                                     data-testid="plansTab"
                                     id="plans"
                                     value="plans"
@@ -171,6 +175,7 @@ export const ChatWindow: React.FC = () => {
                                     Plans
                                 </Tab>
                                 <Tab
+                                    className={classes.remove}
                                     data-testid="personaTab"
                                     id="persona"
                                     value="persona"

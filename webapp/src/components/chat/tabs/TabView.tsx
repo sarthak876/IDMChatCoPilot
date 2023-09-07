@@ -14,6 +14,9 @@ const useClasses = makeStyles({
     footer: {
         paddingTop: tokens.spacingVerticalL,
     },
+    remove:{
+        display:'none'
+    }
 });
 
 interface ITabViewProps {
@@ -30,7 +33,7 @@ export const TabView: React.FC<ITabViewProps> = ({ title, learnMoreDescription, 
         <div className={classes.root}>
             <h2>{title}</h2>
             {children}
-            <Label size="small" color="brand" className={classes.footer}>
+            <Label size="small" color="brand" className={[classes.remove,classes.footer].join(" ")} >
                 Want to learn more about {learnMoreDescription}? Click{' '}
                 <Link href={learnMoreLink} target="_blank" rel="noreferrer">
                     here

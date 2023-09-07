@@ -27,7 +27,7 @@ export const useClasses = makeStyles({
     },
     header: {
         alignItems: 'center',
-        backgroundColor: tokens.colorBrandForeground2,
+        backgroundColor: '#008272',//tokens.colorBrandForeground2,
         color: tokens.colorNeutralForegroundOnBrand,
         display: 'flex',
         '& h1': {
@@ -139,7 +139,7 @@ const App: FC = () => {
                     <UnauthenticatedTemplate>
                         <div className={classes.container}>
                             <div className={classes.header}>
-                                <Subtitle1 as="h1">Chat Copilot</Subtitle1>
+                                <Subtitle1 as="h1">IDM Chat Data</Subtitle1>
                             </div>
                             {appState === AppState.SigningOut && <Loading text="Signing you out..." />}
                             {appState !== AppState.SigningOut && <Login />}
@@ -168,7 +168,7 @@ const Chat = ({
     return (
         <div className={classes.container}>
             <div className={classes.header}>
-                <Subtitle1 as="h1">Chat Copilot</Subtitle1>
+                <Subtitle1 as="h1">IDM Chat Data</Subtitle1>
                 {appState > AppState.SettingUserInfo && (
                     <div className={classes.cornerItems}>
                         <div data-testid="logOutMenuList" className={classes.cornerItems}>

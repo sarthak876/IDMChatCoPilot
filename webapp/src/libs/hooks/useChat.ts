@@ -73,7 +73,7 @@ export const useChat = () => {
     };
 
     const createChat = async () => {
-        const chatTitle = `Copilot @ ${new Date().toLocaleString()}`;
+        const chatTitle = `IDM Chat @ ${new Date().toLocaleString()}`;
         try {
             await chatService
                 .createChatAsync(chatTitle, await AuthHelper.getSKaaSAccessToken(instance, inProgress))
