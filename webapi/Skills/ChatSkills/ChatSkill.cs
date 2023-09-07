@@ -759,6 +759,7 @@ public class ChatSkill
         {
             var stream = chatCompletion.GenerateMessageStreamAsync(chatCompletion.CreateNewChat(prompt.RawContent), this.CreateChatRequestSettings());
             // Stream the message to the client
+            // test checkin
             await foreach (string contentPiece in stream)
             {
                 chatMessage.Content += contentPiece;
