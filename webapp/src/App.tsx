@@ -90,7 +90,7 @@ const App: FC = () => {
                             dispatch(
                                 addAlert({
                                     message:
-                                        'By using Chat Copilot, you agree to protect sensitive data, not store it in chat, and allow chat history collection for service improvements. This tool is for internal use only.',
+                                        'By using Chat NWDSM Copilot, you agree to protect sensitive data, not store it in chat, and allow chat history collection for service improvements. This tool is for internal use only.',
                                     type: AlertType.Info,
                                 }),
                             );
@@ -139,7 +139,7 @@ const App: FC = () => {
                     <UnauthenticatedTemplate>
                         <div className={classes.container}>
                             <div className={classes.header}>
-                                <Subtitle1 as="h1">IDM Chat Data</Subtitle1>
+                                <Subtitle1 as="h1">NWDSM Copilot</Subtitle1>
                             </div>
                             {appState === AppState.SigningOut && <Loading text="Signing you out..." />}
                             {appState !== AppState.SigningOut && <Login />}
@@ -168,7 +168,7 @@ const Chat = ({
     return (
         <div className={classes.container}>
             <div className={classes.header}>
-                <Subtitle1 as="h1">IDM Chat Data</Subtitle1>
+                <Subtitle1 as="h1">NWDSM Copilot</Subtitle1>
                 {appState > AppState.SettingUserInfo && (
                     <div className={classes.cornerItems}>
                         <div data-testid="logOutMenuList" className={classes.cornerItems}>

@@ -21,7 +21,7 @@ export const Constants = {
     bot: {
         profile: {
             id: 'bot',
-            fullName: 'IDM Chat',
+            fullName: 'NWDSM Chat',
             emailAddress: '',
             photo: botIcon1,
         },
