@@ -462,7 +462,7 @@ public class ChatSkill
         var chatMessage = await this.StreamResponseToClient(chatId, userId, promptView, chatContext.Variables.Input);
 
         // Extract semantic chat memory
-        await this.UpdateBotResponseStatusOnClient(chatId, "Generating semantic chat memory");
+        //await this.UpdateBotResponseStatusOnClient(chatId, "Generating semantic chat memory");
         await SemanticChatMemoryExtractor.ExtractSemanticChatMemoryAsync(
             chatId,
             this._kernel,
