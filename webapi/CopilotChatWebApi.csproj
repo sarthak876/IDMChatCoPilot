@@ -83,6 +83,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="nl2sql.config\nl2sql\formulateanswer\config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="nl2sql.config\nl2sql\generatequery\config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -94,6 +97,9 @@
   <ItemGroup>
     <None Update="data\eng.traineddata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="nl2sql.config\nl2sql\formulateanswer\skprompt.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="nl2sql.config\nl2sql\generatequery\skprompt.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
