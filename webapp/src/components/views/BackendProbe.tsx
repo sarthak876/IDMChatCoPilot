@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-import { Body1, Spinner, Title3 } from '@fluentui/react-components';
+//import { Body1, Spinner, Title3 } from '@fluentui/react-components';
+import { Spinner } from '@fluentui/react-components';
 import { FC, useEffect } from 'react';
 import { useSharedClasses } from '../../styles';
 
@@ -34,16 +35,16 @@ export const BackendProbe: FC<IData> = ({ uri, onBackendFound }) => {
 
     return (
         <div className={classes.informativeView}>
-            <Title3>Looking for your backend</Title3>
+            {/* <Title3>Looking for your backend</Title3> */}
             <Spinner />
-            <Body1>
+            {/* <Body1>
                 This sample expects to find a Semantic Kernel service from <strong>webapi/</strong> running at{' '}
                 <strong>{uri}</strong>
             </Body1>
             <Body1>
                 Run your Semantic Kernel service locally using Visual Studio, Visual Studio Code or by typing the
                 following command: <strong>dotnet run</strong>
-            </Body1>
+            </Body1> */}
         </div>
     );
 };

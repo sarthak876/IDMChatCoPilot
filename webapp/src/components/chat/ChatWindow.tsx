@@ -153,6 +153,7 @@ export const ChatWindow: React.FC = () => {
                             Chat
                         </Tab>
                         <Tab
+                            className={classes.remove}
                             data-testid="documentsTab"
                             id="documents"
                             value="documents"
