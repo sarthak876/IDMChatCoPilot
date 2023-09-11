@@ -27,12 +27,14 @@ public sealed class SqlQueryGenerator
     private const string SkillName = "nl2sql";
 
     private readonly ISKFunction _promptGenerator;
+    private readonly ISKFunction _formulateAnswer;
     private readonly ISemanticTextMemory _memory;
 
     public SqlQueryGenerator(IKernel kernel, string rootSkillFolder)
     {
         var functions = kernel.ImportSemanticSkillFromDirectory(rootSkillFolder, SkillName);
         this._promptGenerator = functions["generatequery"];
+        this._formulateAnswer = functions["formulateanswer"];
         this._memory = kernel.Memory;
 
         kernel.ImportSkill(this, SkillName);
@@ -76,5 +78,20 @@ public sealed class SqlQueryGenerator
 
         // Parse result to handle 
         return context.GetResult(ContentLabelQuery);
+    }
+
+    [SKFunction, Description("Generate a user reply based on tabular data and sql query")]
+    [SKName("GenerateReplyFromData")]
+    public async Task<string?> GetReplyForUserQueryAsync(string sqlQuery, string data, string question, SKContext context)
+    {
+        context.Variables.Set("sql", sqlQuery);
+        context.Variables.Set("data", data);
+        context.Variables.Set("question", question);
+
+        // Generate query
+        context = await this._formulateAnswer.InvokeAsync(context).ConfigureAwait(false);
+
+        // Parse result to handle 
+        return context.Result;
     }
 }

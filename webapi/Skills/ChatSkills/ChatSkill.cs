@@ -19,6 +19,7 @@ using CopilotChat.WebApi.Services;
 using CopilotChat.WebApi.Skills.NLToSQLSkills;
 using CopilotChat.WebApi.Storage;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
@@ -95,6 +96,8 @@ public class ChatSkill
 
     private readonly Nl2SqlSkill _nl2SqlSkill;
 
+    private readonly IConfiguration _configuration;
+
     /// <summary>
     /// Create a new instance of <see cref="ChatSkill"/>.
     /// </summary>
@@ -110,6 +113,7 @@ public class ChatSkill
         IOpenAIHelper openAIHelper,
         IDataHelper dataHelper,
         SqlSchemaProviderHarness sqlSchemaProviderHarness,
+        IConfiguration configuration,
         AzureContentSafety? contentSafety = null)
     {
         this._logger = logger;
@@ -134,8 +138,9 @@ public class ChatSkill
         this._openAIHelper = openAIHelper;
         this._dataHelper = dataHelper;
         this._sqlSchemaProviderHarness = sqlSchemaProviderHarness;
+        this._configuration = configuration;
 
-        this._nl2SqlSkill = new Nl2SqlSkill(kernel, sqlSchemaProviderHarness);
+        this._nl2SqlSkill = new Nl2SqlSkill(kernel, sqlSchemaProviderHarness, configuration);
     }
 
     /// <summary>
@@ -737,11 +742,12 @@ public class ChatSkill
         var chatCompletion = this._kernel.GetService<IChatCompletion>();
         var chatMessage = await this.CreateBotMessageOnClient(chatId, userId, JsonSerializer.Serialize(prompt), string.Empty);
         string dataSourceResult = string.Empty;
-        if (!string.IsNullOrWhiteSpace(await this._dataHelper.FindDataSource(input)))
+        string dataSource = await this._dataHelper.FindDataSource(input);
+        if (!string.IsNullOrWhiteSpace(dataSource))
         {
             await this._sqlSchemaProviderHarness.CaptureDBSchemaAsync();
-            string query = await this._nl2SqlSkill.ExecuteAsync(input);
-            dataSourceResult = await this._dataHelper.QueryDataSource(await this._dataHelper.FindDataSource(input), query, input);
+            dataSourceResult = await this._nl2SqlSkill.ExecuteAsync(input, dataSource);
+            //dataSourceResult = await this._dataHelper.QueryDataSource(await this._dataHelper.FindDataSource(input), query, input);
         }
 
         // Create message on client

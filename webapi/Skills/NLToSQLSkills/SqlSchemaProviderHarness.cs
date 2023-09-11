@@ -30,7 +30,9 @@ public sealed class SqlSchemaProviderHarness
     {
         var connectionString = this._configuration.GetConnectionString(databaseKey);
         using var connection = new SqlConnection(connectionString);
-        var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = "18b131e3-ff7e-4225-9474-76af8f1e27cf" });
+        string clientIdKey = "AIService:" + databaseKey + "ManagedIdentity";
+        string managedIdentity = this._configuration.GetSection(clientIdKey).Get<string>();
+        var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentity });
         var token = await credential.GetTokenAsync(new TokenRequestContext(new[] { "https://database.windows.net/" }));
 
         connection.AccessToken = token.Token;

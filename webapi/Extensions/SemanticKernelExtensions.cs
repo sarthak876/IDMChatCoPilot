@@ -115,6 +115,7 @@ internal static class SemanticKernelExtensions
                 openAIHelper: sp.GetRequiredService<IOpenAIHelper>(),
                 dataHelper: sp.GetRequiredService<IDataHelper>(),
                 sqlSchemaProviderHarness: sp.GetRequiredService<SqlSchemaProviderHarness>(),
+                configuration: sp.GetRequiredService<IConfiguration>(),
                 logger: sp.GetRequiredService<ILogger<ChatSkill>>()),
             nameof(ChatSkill));
 
