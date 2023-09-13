@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System.Collections.Generic;
+using System;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -38,45 +38,50 @@ public class Nl2SqlSkill
     {
         string? answer = string.Empty;
         var schemaNames = SchemaDefinitions.GetNames().ToArray();
-        await SchemaProvider.InitializeAsync(
-            this._kernel,
-            schemaNames.Select(s => Path.Combine(Repo.RootConfigFolder, "schema", $"{s}.json"))).ConfigureAwait(false);
-
-        var context = this._kernel.CreateNewContext();
-
-        var query =
-            await this._queryGenerator.SolveObjectiveAsync(
-        objective,
-        context).ConfigureAwait(false);
-
-        if (!string.IsNullOrWhiteSpace(query))
+        try
         {
-            using var dbConnection = new SqlConnection(this._configuration.GetConnectionString(schema));
-            string clientIdKey = "AIService:" + schema + "ManagedIdentity";
-            string managedIdentity = this._configuration.GetSection(clientIdKey).Get<string>();
-            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentity });
-            var token = await credential.GetTokenAsync(new TokenRequestContext(new[] { "https://database.windows.net/" }));
+            await SchemaProvider.InitializeAsync(
+                this._kernel,
+                schemaNames.Select(s => Path.Combine(Repo.RootConfigFolder, "schema", $"{s}.json"))).ConfigureAwait(false);
 
-            dbConnection.AccessToken = token.Token;
-            using var dataSet = await dbConnection.QueryMultipleToDataSetAsync(query);
-            var csvStringBuilder = new StringBuilder();
+            var context = this._kernel.CreateNewContext();
 
-            foreach (DataTable dataTable in dataSet.Tables)
+            var query =
+                await this._queryGenerator.SolveObjectiveAsync(
+            objective,
+            context).ConfigureAwait(false);
+
+            if (!string.IsNullOrWhiteSpace(query))
             {
-                var dataTableCsv = dataTable.GetCsv();
+                using var dbConnection = new SqlConnection(this._configuration.GetConnectionString(schema));
+                string clientIdKey = "AIService:" + schema + "ManagedIdentity";
+                string managedIdentity = this._configuration.GetSection(clientIdKey).Get<string>();
+                var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentity });
+                var token = await credential.GetTokenAsync(new TokenRequestContext(new[] { "https://database.windows.net/" }));
 
-                csvStringBuilder.AppendLine(dataTableCsv);
-                csvStringBuilder.AppendLine();
-                csvStringBuilder.AppendLine();
+                dbConnection.AccessToken = token.Token;
+                using var dataSet = await dbConnection.QueryMultipleToDataSetAsync(query);
+                var csvStringBuilder = new StringBuilder();
+
+                foreach (DataTable dataTable in dataSet.Tables)
+                {
+                    var dataTableCsv = dataTable.GetCsv();
+
+                    csvStringBuilder.AppendLine(dataTableCsv);
+                    csvStringBuilder.AppendLine();
+                    csvStringBuilder.AppendLine();
+                }
+
+                var dataSetCsv = csvStringBuilder.ToString().TrimEnd();
+
+                answer = await this._queryGenerator.GetReplyForUserQueryAsync(query, dataSetCsv, objective, context).ConfigureAwait(false);
             }
-
-            var dataSetCsv = csvStringBuilder.ToString().TrimEnd();
-
-            answer = await this._queryGenerator.GetReplyForUserQueryAsync(query, dataSetCsv, objective, context).ConfigureAwait(false);
+            context.Variables.TryGetValue(SqlQueryGenerator.ContextParamSchemaId, out var schemaId);
         }
-
-        context.Variables.TryGetValue(SqlQueryGenerator.ContextParamSchemaId, out var schemaId);
-
-        return answer ?? "NotFound";
+        catch (Exception ex)
+        {
+            return "Sorry!Unable to fetch any records";
+        }
+        return answer ?? "Sorry!Unable to fetch any records";
     }
 }
